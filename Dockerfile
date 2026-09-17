@@ -15,6 +15,8 @@ RUN mvn -B clean package
 # ---------- stage 2: runtime ----------
 FROM eclipse-temurin:21-jre-alpine
 
+RUN apk upgrade --no-cache
+
 WORKDIR /app
 
 # Do not run as root.
