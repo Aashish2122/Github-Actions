@@ -37,6 +37,8 @@ class NoteControllerTest {
                 .content("{\"title\":\"ci\",\"body\":\"from a test\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
+                // NoteControllerTest.java
+                .andExpect(jsonPath("$.title").value("WRONG"))
                 .andExpect(jsonPath("$.title").value("ci"));
     }
 
@@ -44,6 +46,7 @@ class NoteControllerTest {
     void missingNoteReturns404() throws Exception {
         mockMvc.perform(get("/api/notes/99999"))
                 .andExpect(status().isNotFound());
+
     }
 
     @Test
@@ -51,5 +54,6 @@ class NoteControllerTest {
         mockMvc.perform(get("/actuator/health/readiness"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("UP"));
+
     }
 }
