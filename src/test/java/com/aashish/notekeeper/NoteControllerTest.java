@@ -38,7 +38,6 @@ class NoteControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
                 // NoteControllerTest.java
-                .andExpect(jsonPath("$.title").value("WRONG"))
                 .andExpect(jsonPath("$.title").value("ci"));
     }
 
