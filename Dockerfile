@@ -1,6 +1,5 @@
 # ---------- stage 1: build ----------
-FROM maven:3.9-eclipse-temurin-21 AS build
-
+FROM --platform=$BUILDPLATFORM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copy ONLY the pom first. This layer changes rarely, so the expensive
@@ -14,6 +13,9 @@ RUN mvn -B clean package
 
 # ---------- stage 2: runtime ----------
 FROM eclipse-temurin:21-jre-alpine
+LABEL org.opencontainers.image.source="https://github.com/Aashish2122/Github-Actions"
+LABEL org.opencontainers.image.description="NoteKeeper API"
+LABEL org.opencontainers.image.licenses="MIT"
 
 RUN apk upgrade --no-cache
 
