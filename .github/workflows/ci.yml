@@ -93,3 +93,31 @@ jobs:
             ${{ env.IMAGE }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+    update-config:
+    name: Update config repo
+    runs-on: ubuntu-latest
+    needs: build-scan-push
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Check out the CONFIG repo
+        uses: actions/checkout@v7
+        with:
+          repository: Aashish2122/Helm-Practice
+          token: ${{ secrets.CONFIG_REPO_PAT }}
+          ref: main
+
+      - name: Update the dev image tag
+        run: |
+          yq -i '.image.tag = "${{ github.sha }}"' charts/notekeeper/values-dev.yaml
+          echo "--- values-dev.yaml ---"
+          cat charts/notekeeper/values-dev.yaml
+
+      - name: Commit and push
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add charts/notekeeper/values-dev.yaml
+          git diff --staged --quiet && echo "No change" && exit 0
+          git commit -m "dev: deploy ${{ github.sha }}"
+          git push
